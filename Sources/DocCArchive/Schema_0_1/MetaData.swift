@@ -109,6 +109,7 @@ extension DocCArchive.DocCSchema_0_1 {
         let key = try container.decode(String.self)
         switch key {
           case "Structure"          : self = .known(.structure)
+        case "Application"        : self = .known(.application)
           // case "pseudoSymbol"    : self = .pseudoSymbol
           // case "overview"        : self = .overview
           // case "collection"      : self = .collection
