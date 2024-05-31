@@ -137,7 +137,7 @@ extension DocCArchive.DocCSchema_0_1 {
 
   public struct MetaData: Equatable, Codable, CustomStringConvertible {
     
-    public var role                  : Role
+    public var role                  : Role?
     public var roleHeading           : RoleHeading? // not in tutorial
     public var title                 : String
     public var externalID            : String?
@@ -150,7 +150,9 @@ extension DocCArchive.DocCSchema_0_1 {
 
     public var description: String {
       var ms = "<Meta:"
-      ms += " \(role)"
+      if let role {
+        ms += " \(role)"
+      }
       if let s = roleHeading    { ms += "(“\(s.rawValue)”)"          }
       if !title.isEmpty         { ms += " “\(title)”"                }
       if let s = externalID     { ms += " extid=\(s)"                }
@@ -242,6 +244,8 @@ extension DocCArchive.DocCSchema_0_1 {
         case .collection   : try container.encode("collection"  , forKey: .role)
         case .collectionGroup:
           try container.encode("collectionGroup", forKey: .role)
+      case .none:
+        break
       }
       
       if !fragments.isEmpty {
