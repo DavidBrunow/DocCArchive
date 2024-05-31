@@ -70,27 +70,63 @@ extension DocCArchive.DocCSchema_0_1 {
     public var description: String { return rawValue }
   }
   
-  public enum RoleHeading: String, Codable, CustomStringConvertible {
-    // or just a plain string?
-    case structure        = "Structure"
-    case framework        = "Framework"
-    case instanceMethod   = "Instance Method"
-    case typeMethod       = "Type Method"
-    case initializer      = "Initializer"
-    case instanceProperty = "Instance Property"
-    case enumeration      = "Enumeration"
-    case `case`           = "Case"
-    case `operator`       = "Operator"
-    case article          = "Article"
-    case `protocol`       = "Protocol"
-    case typeProperty     = "Type Property"
-    case `typealias`      = "Type Alias"
-    case `class`          = "Class"
-    case application      = "Application"
-    case function         = "Function"
+  public enum RoleHeading: Codable, CustomStringConvertible, Equatable {
+      public enum Known: String, Codable {
+      // or just a plain string?
+      case structure        = "Structure"
+      case framework        = "Framework"
+      case instanceMethod   = "Instance Method"
+      case typeMethod       = "Type Method"
+      case initializer      = "Initializer"
+      case instanceProperty = "Instance Property"
+      case enumeration      = "Enumeration"
+      case `case`           = "Case"
+      case `operator`       = "Operator"
+      case article          = "Article"
+      case `protocol`       = "Protocol"
+      case typeProperty     = "Type Property"
+      case `typealias`      = "Type Alias"
+      case `class`          = "Class"
+      case application      = "Application"
+      case function         = "Function"
+      }
+      case known(Known)
+      case custom(String)
 
-    public var description: String { return "<RoleHeading: \(rawValue)>" }
-  }
+      public var rawValue: String {
+        switch self {
+        case let .known(value):
+          return value.rawValue
+          case let .custom(value):
+          return value
+        }
+      }
+
+      public var description: String { return "<RoleHeading: \(rawValue)>" }
+
+      public init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let key = try container.decode(String.self)
+        switch key {
+          case "Structure"          : self = .known(.structure)
+          // case "pseudoSymbol"    : self = .pseudoSymbol
+          // case "overview"        : self = .overview
+          // case "collection"      : self = .collection
+          // case "collectionGroup" : self = .collectionGroup
+          // case "article"         : self = .article
+          // case "project"         : self = .project
+          default: self = .custom(key)
+        }
+      }
+
+      public func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        switch self {
+          case let .known(value)          : try container.encode(value.rawValue)
+          case let .custom(value)    : try container.encode(value)
+        }
+      }
+    }
 
   public struct Module: Equatable, Codable, CustomStringConvertible {
     public var name : String
