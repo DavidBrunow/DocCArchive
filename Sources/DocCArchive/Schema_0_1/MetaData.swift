@@ -196,7 +196,7 @@ extension DocCArchive.DocCSchema_0_1 {
         try container.decodeIfPresent(String.self,
                                       forKey: .categoryPathComponent)
 
-      let role = try container.decode(String.self, forKey: .role)
+      let role = try container.decodeIfPresent(String.self, forKey: .role)
       switch role {
         case "symbol":
           let kind = try container.decode(SymbolKind.self, forKey: .symbolKind)
@@ -207,7 +207,7 @@ extension DocCArchive.DocCSchema_0_1 {
         case "article"         : self.role = .article
         case "project"         : self.role = .project
         default:
-          throw DocCArchiveLoadingError.unsupportedMetaDataRole(role)
+          throw DocCArchiveLoadingError.unsupportedMetaDataRole(role ?? "")
       }
       
       fragments = try container.decodeIfPresent(Block.self, forKey: .fragments)
