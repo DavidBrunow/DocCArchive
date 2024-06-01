@@ -58,6 +58,9 @@ extension DocCArchive.DocCSchema_0_1 {
         case "emphasis":
           self = .emphasis(try container.decode([ InlineContent ].self,
                                                 forKey: .inlineContent))
+      case "strikethrough":
+        self = .strikethrough(try container.decode([ InlineContent ].self,
+                                            forKey: .inlineContent))
         case "strong":
           self = .strong(try container.decode([ InlineContent ].self,
                                               forKey: .inlineContent))
