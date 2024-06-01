@@ -18,6 +18,7 @@ extension DocCArchive.DocCSchema_0_1 {
                    overridingTitleInlineContent : [ InlineContent ]?)
     case image    (identifier: String)
     case emphasis ([ InlineContent ])
+    case strikethrough ([ InlineContent ])
     case strong   ([ InlineContent ])
     case codeVoice(code: String)
     
@@ -28,6 +29,7 @@ extension DocCArchive.DocCSchema_0_1 {
           return "\(id)\(isActive ? "" : "-inactive")"
         case .image    (let id)      : return "<img \(id)>"
         case .emphasis (let content) : return "*\(content)*"
+      case .strikethrough   (let content) : return "~\(content)~"
         case .strong   (let content) : return "**\(content)**"
         case .codeVoice(let code)    : return "`\(code)`"
       }
@@ -95,6 +97,9 @@ extension DocCArchive.DocCSchema_0_1 {
         case .emphasis(let content):
           try container.encode("emphasis"  , forKey: .type)
           try container.encode(content     , forKey: .inlineContent)
+      case .strikethrough(let content):
+        try container.encode("s"    , forKey: .type)
+        try container.encode(content     , forKey: .inlineContent)
         case .strong(let content):
           try container.encode("strong"    , forKey: .type)
           try container.encode(content     , forKey: .inlineContent)
